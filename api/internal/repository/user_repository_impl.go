@@ -15,7 +15,7 @@ func NewUserRepository(db *sql.DB) *userRepositoryImpl {
 }
 
 func (r *userRepositoryImpl) Create(ctx context.Context, u *model.User) error {
-	query := `INSERT INTO users (user_id, name, username, groups_member) VALUES ($1, $2, $3, $4)`
+	query := `INSERT INTO users (user_id, name, username) VALUES ($1, $2, $3, $4)`
 
 	_, err := r.db.ExecContext(ctx, query, u.UserId, u.Name, u.Username, u.GroupsMember)
 	return err
