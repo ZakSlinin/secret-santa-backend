@@ -1,3 +1,5 @@
+CREATE DATABASE santa;
+
 -- +goose Up
 -- +goose StatementBegin
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -27,6 +29,7 @@ CREATE TABLE group_members (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS group_members;
 DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS users;
 -- +goose StatementEnd

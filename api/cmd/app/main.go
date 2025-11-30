@@ -1,8 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/secret-santa-rubot/api/internal/handler"
+	"github.com/secret-santa-rubot/api/internal/repository"
+	"github.com/secret-santa-rubot/api/internal/service"
 	"net/http"
 )
 
@@ -19,6 +23,24 @@ func main() {
 		w.Write([]byte("pong"))
 	})
 
-	r.Post("/api/auth/register", func(w http.ResponseWriter, r *http.Request) {})
+	db := r
+	userRepo := repository.NewUserRepository(db)
+	userService := service.NewUserService(userRepo)
+	userHandler := handler.NewUserHandler(userService)
+
 	http.ListenAndServe(":8080", r)
+}
+
+func ConnectionDB() (*sql.DB, error) {
+	dsn := "postgres://postgres:postgres@localhost:5432/santa?sslmode=disable"
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		return nil, err
+	}
+	err = db.Ping()
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
