@@ -4,11 +4,13 @@ import (
 	"database/sql"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	_ "github.com/lib/pq"
 	"github.com/secret-santa-rubot/api/internal/handler"
 	"github.com/secret-santa-rubot/api/internal/repository"
 	"github.com/secret-santa-rubot/api/internal/service"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -40,7 +42,7 @@ func main() {
 }
 
 func ConnectionDB() (*sql.DB, error) {
-	dsn := "postgres://postgres:postgres@localhost:5432/santa?sslmode=disable"
+	dsn := os.Getenv("DATABASE_URL")
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		return nil, err
