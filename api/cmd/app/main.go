@@ -7,6 +7,7 @@ import (
 	"github.com/secret-santa-rubot/api/internal/handler"
 	"github.com/secret-santa-rubot/api/internal/repository"
 	"github.com/secret-santa-rubot/api/internal/service"
+	"log"
 	"net/http"
 )
 
@@ -23,11 +24,18 @@ func main() {
 		w.Write([]byte("pong"))
 	})
 
-	db := r
+	// DB connection
+	db, err := ConnectionDB()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	// User endpoint setup
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(userService)
 
+	r.Post("/api/register", userHandler.RegisterUser)
 	http.ListenAndServe(":8080", r)
 }
 
